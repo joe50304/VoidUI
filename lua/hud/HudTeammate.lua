@@ -795,6 +795,7 @@ if VoidUI.options.teammate_panels then
 		end
 	end
 	function HUDTeammate:set_detection()
+		if not self._custom_player_panel then return end
 		local health_panel = self._custom_player_panel:child("health_panel")
 		local detect_value = health_panel:child("detect_value")
 		local downs_value = health_panel:child("downs_value")
