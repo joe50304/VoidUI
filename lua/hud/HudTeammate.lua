@@ -759,6 +759,14 @@ if VoidUI.options.teammate_panels then
 		interact_time:set_bottom(self._custom_player_panel:bottom() - 3)
 		self:create_custom_waiting_panel(teammates_panel)
 		self:set_info_visible()
+		-- VanillaHUD Plus' HUDTeammate:_truncate_name() shrinks the name font by 0.1
+		-- in a loop. On our custom panel that loop is hot at spawn (set_name), and
+		-- under LuaJIT the float compare diverges from the interpreter so it never
+		-- exits and the game freezes. Force that one function to run interpreted.
+		if HUDTeammate._truncate_name and not HUDTeammate._void_truncate_jit_off and jit and jit.off then
+			HUDTeammate._void_truncate_jit_off = true
+			pcall(jit.off, HUDTeammate._truncate_name, true)
+		end
 	end
 
 	function HUDTeammate:whisper_mode_changed()
